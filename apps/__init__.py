@@ -24,4 +24,7 @@ def create_app():
     global redis_store
     redis_store = StrictRedis(host=Config.REDIS_HOST, port=Config.REDIS_PORT, decode_responses=True)
 
+    from apps.modules.todolist import todo_blue
+    app.register_blueprint(todo_blue)
+
     return app

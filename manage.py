@@ -8,9 +8,6 @@ app = create_app()
 manager= Manager(app)
 
 
-@app.route('/',methods=["get",'post'])
-def index():
-    return render_template('todolist.html')
 
 if __name__ == '__main__':
     manager.run()
