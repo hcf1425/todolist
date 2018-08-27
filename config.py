@@ -1,4 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
+from redis import StrictRedis
 
 class Config(object):
     """app配置类"""
@@ -11,3 +11,15 @@ class Config(object):
     # 配置redis数据库
     REDIS_HOST = "127.0.0.1"
     REDIS_PORT = 6379
+
+    # 秘钥
+    SECRET_KEY = "HAJKHKJ"
+
+    # 配置Session:将flask的session数据引导到redis
+    SESSION_TYPE = "redis"  # 存储到redis
+    # 配置redis的位置
+    SESSION_REDIS = StrictRedis(host=REDIS_HOST, port=REDIS_PORT)
+    # 使用签名将session的明文转成密文
+    SESSION_USE_SIGNER = True
+    # 设置session有效期为一天
+    PERMANENT_SESSION_LIFETIME = 60 * 60 * 24
