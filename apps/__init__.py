@@ -11,3 +11,5 @@ def create_app():
 
     # 配置mysql数据库
     db = SQLAlchemy(app)
+
+    return app
