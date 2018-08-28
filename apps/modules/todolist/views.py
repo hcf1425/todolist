@@ -4,4 +4,7 @@ from flask import render_template
 @todo_blue.route('/')
 def index():
 
-    return render_template('todolist.html')
+    context ={
+        'user':None
+    }
+    return render_template('demo.html',context=context)
