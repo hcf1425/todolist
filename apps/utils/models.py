@@ -45,6 +45,7 @@ class Users(BaseModel,db.Model):
         :return: 返回校验结果， True or False
         """
         return check_password_hash(self.password_hash, password)
+
     def to_dict(self):
         resp_dict = {
             "id": self.id,
@@ -53,14 +54,14 @@ class Users(BaseModel,db.Model):
             "mobile": self.mobile,
             "gender": self.gender if self.gender else "MAN",
             "signature": self.signature if self.signature else "",
-            "tasks": self.tasks.title
+            # "tasks": self.tasks.title
         }
         return resp_dict
 
 
 class Tasks(BaseModel,db.Model):
     """任务模型"""
-    __tablename__ ='tb_tasks'
+    __tablename__ = 'tb_tasks'
 
     id = db.Column(db.Integer, primary_key=True)  # 新闻编号
     title = db.Column(db.String(256), nullable=False)  # 新闻标题

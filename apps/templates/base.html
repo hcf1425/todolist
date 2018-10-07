@@ -22,7 +22,7 @@
             {# 主页左上角用户数据的展示 #}
             {% if context.user %}
                 <div class="user_login fr">
-                    <img src="{% if context.user.avatar_url %}{{ context.user.avatar_url }}{% else %}../../static/news/images/person01.png{% endif %}" class="lgin_pic">
+                    <img src="{% if context.user.avatar_url %}{{ context.user.avatar_url }}{% else %}../static/images/person01.png{% endif %}" class="lgin_pic">
                     <a href="/user/info" id="nick_name">{{ context.user.nick_name }}</a>
                     <a href="javascript:;" onclick="logout()">退出</a>
                 </div>

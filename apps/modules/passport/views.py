@@ -1,12 +1,14 @@
-import re,random
+import re,random,datetime
 
 from . import passport_blue
-from flask import request, abort, make_response, jsonify,json
+from flask import request, abort, make_response, jsonify,json,session
 from utils.captcha.captcha import captcha
 import logging
-from apps import redis_store
+from apps import redis_store,db
 from apps.utils import constants,response_code
 from apps.lib.dysms_python.demo_sms_send import *
+from apps.utils.models import Users
+
 
 @passport_blue.route('/login')
 def login():
@@ -43,6 +45,9 @@ def get_image_code():
     return response
 
 
+"""短信验证码发送业务逻辑"""
+
+
 @passport_blue.route('/sms_code',methods =["post"])
 def send_sms_code():
 
@@ -73,14 +78,14 @@ def send_sms_code():
         return jsonify(errno=response_code.RET.PARAMERR, errmsg='验证码输入有误')
 
     sms_code = "%06d" % random.randint(0,999999)
-    print(sms_code)
+    # print(sms_code)
     logging.debug(sms_code)
     # 调用阿里云接口发送验证码
     __business_id = uuid.uuid1()
     code_json = "{'code':"+sms_code+"}"
     res=json.loads(send_sms(__business_id, phone_number, "hcf1425", "SMS_145595939", code_json).decode())
     status = res.get('Code')
-    print(res)
+    # print(res)
 
     if status != "OK":
         return jsonify(errno=response_code.RET.PARAMERR, errmsg='短信发送失败')
@@ -94,4 +99,54 @@ def send_sms_code():
 
     # 8.返回短信验证码发送的结果
     return jsonify(errno=response_code.RET.OK, errmsg='发送短信成功')
+
+
+"""注册业务逻辑"""
+
+
+@passport_blue.route('/register',methods=["POST"])
+def register():
+    # 1.接受参数
+    print("正在注册..............")
+    json_dict =request.json
+    phone_num = json_dict.get("mobile")
+    client_sms_code = json_dict.get("smscode")
+    password = json_dict.get("password")
+
+    # 2. 校验参数
+    if not all([phone_num,client_sms_code,password]):
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='参数不完整')
+
+    try:
+        server_sms_code = redis_store.get("SMS:"+phone_num)
+
+    except Exception as e:
+        logging.error(e)
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='数据库查询异常')
+
+    if client_sms_code.lower() != server_sms_code.lower():
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='验证码输入有误')
+
+    # 3.进行注册，将用户数据记录到数据
+    user = Users()
+    user.mobile = phone_num
+    user.nick_name = phone_num
+    user.password = password
+
+    # 记录用户登录时间
+    user.last_login = datetime.datetime.now()
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        logging.error(e)
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='数据库异常')
+
+
+    # 4.状态保持
+    session["user_id"] = user.id
+
+    # 5.响应注册成功
+    return jsonify(errno=response_code.RET.OK, errmsg='注册成功')
 
