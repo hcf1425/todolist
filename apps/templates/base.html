@@ -7,19 +7,19 @@
     <link rel="stylesheet" type="text/css" href="../static/css/main.css">
     <script type="text/javascript" src="../static/js/jquery-1.12.4.min.js"></script>
     <script type="text/javascript" src="../static/js/main.js"></script>
-{#    <script type="text/javascript" src="../../static/news/js/detail.js"></script>#}
+
     {% block script %}{# 网页特有的js #}{% endblock script %}
 </head>
 <body>
     <div class="header_con">
         <div class="header">
-{#            <a href="/" class="logo fl"><img src="../static/images/pic_code.png" alt="logo"></a>#}
+
             <a href="/" class="logo fl">To do list</a>
             {% block category_menu %}
-                {# 新闻分类数据展示 #}
+
             {% endblock category_menu %}
 
-            {# 主页左上角用户数据的展示 #}
+
             {% if context.user %}
                 <div class="user_login fr">
                     <img src="{% if context.user.avatar_url %}{{ context.user.avatar_url }}{% else %}../static/images/person01.png{% endif %}" class="lgin_pic">
@@ -35,7 +35,7 @@
     </div>
 
     {% block content %}
-        {# 新闻的正文 #}
+        {# 正文 #}
     {% endblock content %}
 
     <div class="footer">
