@@ -16,6 +16,7 @@ def index():
     context = {
         'user': user.to_dict() if user else None
     }
+
     return render_template('demo.html',context=context)
 
 

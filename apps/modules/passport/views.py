@@ -150,3 +150,73 @@ def register():
     # 5.响应注册成功
     return jsonify(errno=response_code.RET.OK, errmsg='注册成功')
 
+
+"""退出登录后端逻辑"""
+
+
+@passport_blue.route("/logout")
+def logout():
+    """
+    退出登录
+    """
+    # 清理session数据
+
+    session.pop("user_id",None)
+    session.pop("mobile", None)
+    session.pop("nick_name", None)
+    # 逻辑优化：如果是管理员身份进入到前台，退出前台时，需要将is_admin清除
+    session.pop("is_admin",False)
+
+    return jsonify(errno=response_code.RET.OK, errmsg='退出登录成功')
+
+
+"""登录逻辑"""
+
+
+@passport_blue.route("/login",methods =["POST"])
+def login_user():
+    # 1.接收数据
+    json_dict = request.json
+    phone_number = json_dict.get("mobile")
+    password = json_dict.get("password")
+
+    # 2、校验参数
+    if not all([phone_number,password]):
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='参数不完整')
+
+    # 3、使用手机号查询用户信息
+    user = None
+    try:
+        user = Users.query.filter(Users.mobile == phone_number).first()
+
+    except Exception as e:
+        logging.error(e)
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='数据库查询异常！')
+
+    if not user:
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='用户名或密码输入有误！1')
+    # if user.password_hash != password:
+    #     return jsonify(errno=response_code.RET.PARAMERR, errmsg='用户名或密码输入有误！')
+    # pass
+
+    # 4、匹配该用户要登录的用户密码
+    if not user.check_password(password):
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='用户名或密码输入有误！2')
+
+    # 5、记录最后一次登录时间
+    user.last_login =datetime.datetime.now()
+    try:
+        # 修改数据不用add()
+        db.session.commit()
+
+    except Exception as e:
+        logging.error(e)
+        return jsonify(errno=response_code.RET.PARAMERR, errmsg='用户最近一次登录时间记录异常')
+
+    # 6、状态保持
+    session["user_id"] = user.id
+    # session["mobile"] = user.mobile
+    # session["nick_name"] = user.nick_name
+
+    # 7、响应结果
+    return jsonify(errno=response_code.RET.OK, errmsg='登录成功')

@@ -37,3 +37,12 @@
     text-decoration:none;
     margin:0 10px;
 }
+
+.welcome{
+    height:160px;
+    line-height:60px;
+    color: #d81e06;
+    margin-top: 35%;
+    margin-left: auto;
+    /*font-size: 30px;*/
+}
