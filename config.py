@@ -2,7 +2,7 @@ from redis import StrictRedis
 
 class Config(object):
     """app配置类"""
-    DEBUG = True
+    DEBUG = False
     # 配置mysql数据库:指定数据库位置
     SQLALCHEMY_DATABASE_URI = "mysql://root:hcfhcf123@127.0.0.1:3306/todolist"
 
