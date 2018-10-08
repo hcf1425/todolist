@@ -1,4 +1,3 @@
-# coding: utf-8
 from flask_migrate import Migrate,MigrateCommand
 from flask_script import Manager
 from apps import create_app,db
@@ -18,5 +17,5 @@ manager.add_command("db",MigrateCommand)
 
 
 if __name__ == '__main__':
-    # print(app.url_map)
+    print(app.url_map)
     manager.run()
