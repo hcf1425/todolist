@@ -1,6 +1,6 @@
 # coding: utf-8
 from flask_migrate import Migrate,MigrateCommand
-import flask_script
+from flask_script import Manager
 from apps import create_app,db
 from apps.utils import models  #这句话不能注释，否则迁移的时候会找不到模型类。报 no change detected
 
@@ -8,7 +8,7 @@ from apps.utils import models  #这句话不能注释，否则迁移的时候会
 app = create_app()
 
 # 创建脚本管理器对象
-manager= flask_script.Manager(app)
+manager= Manager(app)
 
 # 迁移时让app和db建立关联
 Migrate(app,db)
