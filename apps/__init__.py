@@ -56,4 +56,7 @@ def create_app():
     from apps.modules.passport import passport_blue
     app.register_blueprint(passport_blue)
 
+    from apps.modules.tasks import task_blue
+    app.register_blueprint(task_blue)
+
     return app

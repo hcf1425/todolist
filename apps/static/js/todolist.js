@@ -11,8 +11,30 @@ $(function(){
 				alert('请输入内容')
 				return
 			}
-			var $li = $('<li><span>'+ vals +'</span><a href="javascript:;" class="up"> ↑ </a><a href="javascript:;" class="down"> ↓ </a><a href="javascript:void(0);" class="del">删除</a></li>')
-			$('#list').prepend( $li )
+
+			// 发起添加任务请求
+			var params = {
+				"task":vals,
+			}
+			$.ajax({
+                url: "/task/add",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(params),
+                headers: {'X-CSRFToken': getCookie('csrf_token')},
+                success: function (repsonse) {
+                    if (repsonse.errno == '0') {
+                        location.reload()
+                        // alert("登录成功")
+                    }
+                    else {
+                        alert(repsonse.errmsg)
+                    }
+                }
+            })
+
+			// var $li = $('<li><span>'+ vals +'</span><a href="javascript:;" class="up"> ↑ </a><a href="javascript:;" class="down"> ↓ </a><a href="javascript:void(0);" class="del">删除</a></li>')
+			// $('#list').prepend( $li )
 		})
 
 		// $('a').click(function(){
