@@ -1,3 +1,4 @@
+#!/usr/local/bin/python
 import re,random,datetime
 
 from . import passport_blue
