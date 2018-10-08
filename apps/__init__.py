@@ -9,8 +9,8 @@ pymysql.install_as_MySQLdb()
 # 创建一个空的db对象
 db = SQLAlchemy()
 # 准备一个空的redis_store
-#redis_store = None  # type: StrictRedis
-redis_store: StrictRedis = None
+redis_store = None
+# redis_store: StrictRedis = None
 
 
 def setup_log(level):
