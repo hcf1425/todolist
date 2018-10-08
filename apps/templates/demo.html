@@ -15,7 +15,7 @@
             <ul id="list" class="list">
                 {% if context.tasks %}
                     {% for task in context.tasks %}
-                        <li>&nbsp;&nbsp;&nbsp;<span>{{ task }}</span><a href="javascript:;" class="up"> ↑ </a><a href="javascript:;" class="down"> ↓ </a><a href="javascript:void(0);" class="del">删除</a></li>
+                        <li><label>&nbsp;{{ loop.index }}、</label><span class="span">{{ task }}</span><a href="javascript:;" class="up"> ↑ </a><a href="javascript:;" class="down"> ↓ </a><a href="javascript:void(0);" class="del">完成</a></li>
                     {% endfor %}
                     {% else %}
                     &nbsp;&nbsp;&nbsp;<h1 class="tasks" >要不添加一个任务，弄着玩玩~</h1>
